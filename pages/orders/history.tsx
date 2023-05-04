@@ -19,8 +19,8 @@ const columns: GridColDef[] = [
         renderCell: ( params: GridRenderCellParams ) => {
             return (
                 params.row.paid
-                    ? <Chip color="success" label="Pagada" variant='outlined' />
-                    : <Chip color="error" label="No pagada" variant='outlined' />
+                    ? <Chip color="success" label="Pagada" variant='outlined' style={{ width: '100%' }}/>
+                    : <Chip color="error" label="No pagada" variant='outlined' style={{ width: '100%' }}/>
             )
         }
     },
@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
                             padding: '10px', 
                             color: '#fff', 
                             borderRadius: '8px' , 
-                            width: '80px',
+                            width: '100%',
                             textAlign: 'center',
                             fontWeight: '600',
                             textTransform: 'uppercase',
