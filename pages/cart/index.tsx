@@ -1,4 +1,4 @@
-import { CartList } from "@/components/cart"
+import { CartList, OrderSummary } from "@/components/cart"
 import { ShopLayout } from "@/components/layouts"
 import { Card, CardContent, Grid, Typography, Divider, Box, Button } from "@mui/material"
 
@@ -27,6 +27,7 @@ const CartPage = () => (
                         <Divider sx={{ my: 1 }} />
 
                         {/* Orden Summary */}
+                        <OrderSummary />
 
                         <Box sx={{ mt: 3 }}>
                             <Button color="secondary" className='circular-btn' fullWidth>
