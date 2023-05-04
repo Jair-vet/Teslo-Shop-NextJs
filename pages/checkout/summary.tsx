@@ -15,7 +15,7 @@ const SummaryPage = () => {
             <Grid item xs={ 12 } sm={ 7 }>
                 <CartList />
             </Grid>
-            <Grid item xs={ 12 } sm={ 5 }>
+            <Grid item xs={ 12 } sm={ 5 } sx={{ mt: 8 }}>
                 <Card className='summary-card'>
                     <CardContent>
                         <Typography variant='h2'>Resumen (3 productos)</Typography>
