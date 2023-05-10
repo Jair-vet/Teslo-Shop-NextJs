@@ -1,29 +1,27 @@
 import { ShopLayout } from '@/components/layouts'
 import { ProductList } from '@/components/products'
-import { Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { Inter } from 'next/font/google'
+import { useProducts } from '../hooks'
 
 
 const inter = Inter({ subsets: ['latin'] })
 
-import useSWR from 'swr'
-const fetcher = (...args: [key: string]) => fetch(...args).then(res => res.json())
 
 export default function HomePage() {
 
-  const { data, error, isLoading } = useSWR('/api/products', fetcher)
-
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  const { products, isLoading } = useProducts('/products')
 
   return (
     <ShopLayout title={'Teslo-Shop - Home'} pageDescription={'Encuentra los mejores productos aqui en Teslo'}>
       <Typography variant='h1' component='h1'>Tienda</Typography>
       <Typography variant='h2' sx={{ mb: 1 }}>Todos los productos</Typography>
 
-      <ProductList 
-        products={ data }        
-      />
+      {
+        isLoading
+          ? <h1>Cargando...</h1>
+          : <ProductList products={ products }/>
+      }
 
     </ShopLayout>
   )
