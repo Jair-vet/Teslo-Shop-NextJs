@@ -3,6 +3,7 @@ import { ProductList } from '@/components/products'
 import { Typography } from '@mui/material'
 import { Inter } from 'next/font/google'
 import { useProducts } from '../hooks'
+import { FullScreenLoading } from '@/components/ui'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -19,7 +20,7 @@ export default function HomePage() {
 
       {
         isLoading
-          ? <h1>Cargando...</h1>
+          ? <FullScreenLoading />
           : <ProductList products={ products }/>
       }
 
