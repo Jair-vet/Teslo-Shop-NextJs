@@ -33,9 +33,6 @@ const SearchPage: NextPage<Props> = ({ products, foundProducts, query }) => {
                     </Box>
                 )
         }
-
-        
-
         
         <ProductList products={ products } />
         
