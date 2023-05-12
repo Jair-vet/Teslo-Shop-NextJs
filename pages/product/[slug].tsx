@@ -3,7 +3,7 @@ import { ProductSlideshow, SizeSelector } from "@/components/products"
 import { ItemCounter } from "@/components/ui"
 import { dbProducts } from "@/database"
 import { IProduct } from "@/interfaces"
-import { Grid, Box, Typography, Button} from "@mui/material"
+import { Grid, Box, Typography, Button, Chip} from "@mui/material"
 import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from "next"
 
 interface Props {
@@ -44,9 +44,17 @@ const ProductPage:NextPage<Props> = ({ product }) => {
             </Box>
 
             {/* Agregar al Carrito */}
-            <Button color="secondary" className="circular-btn">
-              Agregar al Carrito
-            </Button>
+            {
+              (product.inStock > 0)
+              ? (
+                <Button color="secondary" className="circular-btn">
+                  Agregar al Carrito
+                </Button>
+              ) : (
+                <Chip label='No hay Disponibles' color="error" variant="outlined"/>
+              )
+
+            }
             {/* Cuando no hay Disponibles */}
             {/* <Chip label='No hay Disponibles' color='error' variant="outlined"/> */}
 
