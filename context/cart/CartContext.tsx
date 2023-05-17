@@ -14,4 +14,4 @@ interface ContextProps {
 }
 
 
-export const CartContext = createContext({} as ContextProps );
+export const CartContext = createContext({} as ContextProps ); 

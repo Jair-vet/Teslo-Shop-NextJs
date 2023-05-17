@@ -14,7 +14,7 @@ const CART_INITIAL_STATE: CartState = {
 
 interface Props {
     children: ReactNode
-}
+} 
 
 export const CartProvider:FC<Props> = ({ children }) => {
 
