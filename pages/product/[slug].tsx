@@ -5,13 +5,18 @@ import { dbProducts } from "@/database"
 import { ICartProduct, IProduct, ISize } from "@/interfaces"
 import { Grid, Box, Typography, Button, Chip} from "@mui/material"
 import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from "next"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { useRouter } from 'next/router';
+import { CartContext } from "@/context"
 
 interface Props {
   product: IProduct
 }
 
 const ProductPage:NextPage<Props> = ({ product }) => {
+
+  const router = useRouter()
+  const { addProductToCart, updateCartQuantity, removeCartProduct } = useContext( CartContext )
 
   const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
     _id: product._id,
@@ -30,6 +35,20 @@ const ProductPage:NextPage<Props> = ({ product }) => {
       size
     }))
   }
+
+  const onUpdateQuantity = ( quantity: number ) => {
+    setTempCartProduct( currentProduct => ({
+      ...currentProduct,
+      quantity
+    }));
+  }
+
+  const onAddProduct = () => {    
+    if ( !tempCartProduct.size ) { return; }
+
+    addProductToCart(tempCartProduct);
+    router.push('/cart');
+}
 
   return (
     // Navbar
@@ -53,7 +72,11 @@ const ProductPage:NextPage<Props> = ({ product }) => {
             <Box sx={{ my: 2 }}>
               <Typography variant='subtitle2'>Cantidad</Typography>
               {/* ItemCounter */}
-              <ItemCounter />
+              <ItemCounter 
+                currentValue={ tempCartProduct.quantity }
+                updatedQuantity={ onUpdateQuantity }
+                maxValue={ product.inStock > 10 ? 10: product.inStock }   // products.inStock
+              />
               {/* Tamaños de Ropa */}
               <SizeSelector 
                 sizes={ product.sizes } 
@@ -67,7 +90,11 @@ const ProductPage:NextPage<Props> = ({ product }) => {
             {
               (product.inStock > 0)
               ? (
-                  <Button color="secondary" className="circular-btn" >
+                  <Button 
+                    color="secondary" 
+                    className="circular-btn" 
+                    onClick={ onAddProduct }
+                  >
                     {
                       tempCartProduct.size
                         ? 'Agregar al Carrito'
