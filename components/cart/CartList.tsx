@@ -25,7 +25,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                     {/* Imagen del Producto */}
                     <Grid item xs={3}>
                         {/* TODO: llevar a la página del producto */}
-                        <NextLink href="/product/slug" passHref>
+                        <NextLink href="/product/slug" passHref legacyBehavior>
                             <Link>
                                 <CardActionArea>
                                     <CardMedia 
@@ -45,7 +45,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
 
                             {
                                 editable 
-                                ? <ItemCounter />
+                                ?  <h1>Agregar Contador</h1>  //<ItemCounter />
                                 : <Typography variant='h5'>3 items</Typography>
                             }
                             
