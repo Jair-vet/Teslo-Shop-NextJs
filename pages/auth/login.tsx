@@ -2,6 +2,7 @@ import NextLink from 'next/link';
 import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '@/components/layouts';
 import { useForm } from 'react-hook-form';
+import { validations } from '@/utils';
 
 
 type FormData = {
@@ -35,7 +36,8 @@ const LoginPage = () => {
                                 fullWidth 
                                 { 
                                     ...register('email', ({
-                                        required: 'Este campo es Requerido'
+                                        required: 'Este campo es Requerido',
+                                        validate: validations.isEmail
                                     })) 
                                 }
                                 error={ !!errors.email }
