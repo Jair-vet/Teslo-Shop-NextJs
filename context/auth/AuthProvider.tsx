@@ -62,7 +62,7 @@ export const AuthProvider:FC<Props> = ({ children }) => {
         try {
             const { data } = await tesloApi.post('/user/register', { name, email, password });
             const { token, user } = data;
-            Cookies.set('token', token );
+            Cookies.set('token', token ); // Guardar en las Cookies el token
             dispatch({ type: '[Auth] - Login', payload: user });
             return {
                 hasError: false
