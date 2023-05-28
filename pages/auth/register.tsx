@@ -27,30 +27,15 @@ const RegisterPage = () => {
 
     const onRegisterForm = async( {  name, email, password }: FormData ) => {
         
-        // setShowError(false);
-        // const { hasError, message } = await registerUser(name, email, password);
+        setShowError(false);
+        const { hasError, message } = await registerUser(name, email, password);
 
-        try {
-            
-            const { data } = await tesloApi.post('/user/register', { name, email, password })
-            const { token, user } = data
-            console.log({ token, user });
-            
-
-        } catch (error) {
-            console.log('Error en las Credenciales');
-            setShowError(true)
-            setTimeout(() => {
-                setShowError(false)
-            }, 3000)
+        if ( hasError ) {
+            setShowError(true);
+            setErrorMessage( message! );
+            setTimeout(() => setShowError(false), 3000);
+            return;
         }
-
-        // if ( hasError ) {
-        //     setShowError(true);
-        //     setErrorMessage( message! );
-        //     setTimeout(() => setShowError(false), 3000);
-        //     return;
-        // }
         
         // Todo: navegar a la pantalla que el usuario estaba
         router.replace('/');
