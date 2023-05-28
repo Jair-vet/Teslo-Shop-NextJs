@@ -38,6 +38,8 @@ const LoginPage = () => {
                 setShowError(false)
             }, 3000)
         }
+
+        //  TODO : navegar  la pantalla de inicio
         
     }
 
