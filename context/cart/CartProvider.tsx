@@ -37,10 +37,6 @@ const CART_INITIAL_STATE: CartState = {
 }
 
 
-// const CART_INITIAL_STATE: CartState = {
-//     cart:  Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : []
-// }
-
 interface Props {
     children: ReactNode
 } 
@@ -79,7 +75,9 @@ export const CartProvider:FC<Props> = ({ children }) => {
 
     //  Guardad la informacion en las cookies
     useEffect(() => {
-        Cookie.set('cart', JSON.stringify( state.cart ));
+        if( state.cart.length > 0 ){
+            Cookie.set('cart', JSON.stringify( state.cart ));
+        }
     }, [state.cart]);
 
     
