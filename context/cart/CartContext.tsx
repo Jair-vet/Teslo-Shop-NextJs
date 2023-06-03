@@ -1,6 +1,6 @@
 import { createContext } from 'react';
+import { ShippingAddress } from './';
 import { ICartProduct } from '../../interfaces';
-import { ShippingAddress } from './CartProvider';
 
 
 interface ContextProps {
@@ -20,4 +20,4 @@ interface ContextProps {
 }
 
 
-export const CartContext = createContext({} as ContextProps ); 
+export const CartContext = createContext({} as ContextProps );
