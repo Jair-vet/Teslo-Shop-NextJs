@@ -1,15 +1,15 @@
 import NextLink from 'next/link';
-import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '@/components/layouts';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/utils';
 import { tesloApi } from '@/api';
 import { ErrorOutline } from '@mui/icons-material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { setTimeout } from 'timers';
 import { AuthContext } from '@/context';
 import { useRouter } from 'next/router';
-import { getSession, signIn } from 'next-auth/react';
+import { getProviders, getSession, signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
 
 
@@ -25,6 +25,16 @@ const LoginPage = () => {
     const { loginUser } = useContext( AuthContext )
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false)
+
+    const [providers, setProviders] = useState<any>({});
+
+    useEffect(() => {
+      getProviders().then( prov => {
+        // console.log({prov});
+        setProviders(prov)
+      })
+    }, [])
+    
 
     const onLoginUser = async( {email, password}: FormData ) => {
 
@@ -109,6 +119,41 @@ const LoginPage = () => {
                                 </Link>
                             </NextLink>
                         </Grid>
+
+
+                        <Grid item xs={12} display='flex' flexDirection='column' justifyContent='end'>
+                            <Divider sx={{ width: '100%', mb: 2 }} />
+                            {
+                                Object.values( providers ).map(( provider: any ) => {
+                                    
+                                    if ( provider.id === 'credentials' ) return (<div key="credentials"></div>);
+
+                                    return (
+                                        <Button
+                                            key={ provider.id }
+                                            variant="outlined"
+                                            fullWidth
+                                            color="primary"
+                                            sx={{ 
+                                                mb: 2, 
+                                                display:'flex', 
+                                                alignItems:'center', 
+                                                justifyContent:'space-evenly', 
+                                                fontSize: '16px', 
+                                                fontWeight: 'bold',
+                                            }}
+                                            onClick={ () => signIn( provider.id ) }
+                                        >
+                                            { provider.name }
+                                            <img style={{width : '25px' }} src={`/${provider.name.toLowerCase()}.png`} alt='logo' />
+                                        </Button>
+                                    )
+
+                                })
+                            }
+
+                        </Grid>
+
                     </Grid>
                 </Box>
             </form>

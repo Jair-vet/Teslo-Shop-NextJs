@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GithubProvider from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
+import GoogleProvider from "next-auth/providers/google";
 
 import { dbUsers } from '../../../database';
  
@@ -35,9 +36,9 @@ export default NextAuth({
         }),
         
         // GoogleProvider({
-        //     clientId: process.env.GOOGLE_CLIENT_ID,
-        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET
-        // })
+        //     clientId: process.env.GOOGLE_CLIENT_ID!,
+        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        // }),
     ],
 
     // Custom Pages
