@@ -1,38 +1,33 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
- 
-import * as jose from 'jose'
- 
-// This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-    
- 
-    if (request.nextUrl.pathname.startsWith('/checkout')) {
-        const response = NextResponse.next();
- 
-        // Getting cookies from the request
-        const token = request.cookies.get('token');
-        let isValidToken = false;
- 
-        try {
-            // await jose.jwtVerify(token || '', new TextEncoder().encode(process.env.JWT_SECRET));
-            isValidToken = true;
-            return NextResponse.next();
-        } catch (error) {
-            console.error(`JWT Invalid or not signed in`, { error });
-            isValidToken = false;
-        }
- 
-        if (!isValidToken) {
-            const { pathname } = request.nextUrl;
-            return NextResponse.redirect(
-                new URL(`/auth/login?redirect=${pathname}`, request.url)
-            );
-        }
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+// import { jwt } from '../../utils';
+
+
+export async function middleware( req: NextRequest | any, ev: NextFetchEvent ) {
+
+    const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // console.log({ session });
+
+    if ( !session ) {
+        const requestedPage = req.page.name;
+        return NextResponse.redirect(`/auth/login?p=${ requestedPage }`);
     }
+
+    return NextResponse.next();
+
+
+    // const { token = '' } = req.cookies;
+    // // return new Response('No autorizado', {
+    // //     status: 401
+    // // });
+    // try {
+    //     await jwt.isValidToken( token );
+    //     return NextResponse.next();
+    // } catch (error) {
+    //     // return Response.redirect('/auth/login');
+    //     const requestedPage = req.page.name;
+    //     return NextResponse.redirect(`/auth/login?p=${ requestedPage }`);
+    // }
+
 }
- 
-// See "Matching Paths" below to learn more
-export const config = {
-    matcher: ['/checkout/:path*'],
-};
