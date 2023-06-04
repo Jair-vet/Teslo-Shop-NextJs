@@ -8,6 +8,8 @@ import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '@/context/auth';
 import { tesloApi } from '@/api';
+import { getSession, signIn } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
 
 
 type FormData = {
@@ -29,17 +31,18 @@ const RegisterPage = () => {
         
         setShowError(false);
         const { hasError, message } = await registerUser(name, email, password);
-
+        
         if ( hasError ) {
             setShowError(true);
             setErrorMessage( message! );
             setTimeout(() => setShowError(false), 3000);
             return;
         }
-        
-        // Todo: navegar a la pantalla que el usuario estaba
-        const destination = router.query.p?.toString() || '/';
-        router.replace(destination);
+//         
+//         Todo: navegar a la pantalla que el usuario estaba
+//         const destination = router.query.p?.toString() || '/';
+//         router.replace(destination);
+        await signIn('credentials', { email, password }) 
 
     }
 
@@ -126,6 +129,28 @@ const RegisterPage = () => {
         </form>
     </AuthLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+    
+    const session = await getSession({ req });
+    // console.log({session});
+
+    const { p = '/' } = query;
+
+    if ( session ) {
+        return {
+            redirect: {
+                destination: p.toString(),
+                permanent: false
+            }
+        }
+    }
+
+
+    return {
+        props: { }
+    }
 }
 
 export default RegisterPage
