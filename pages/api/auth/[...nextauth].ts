@@ -22,7 +22,7 @@ export default NextAuth({
                 password: { label: 'Contraseña:', type: 'password', placeholder: 'Contraseña'  },
             },
             async authorize(credentials) {
-                console.log({credentials})
+                // console.log({credentials})
 
                 // return { id: "1", name: 'Jair Aceves', correo: 'jair@google.com', role: 'admin' };
                 return await dbUsers.checkUserEmailPassword( credentials!.email, credentials!.password );
@@ -32,30 +32,35 @@ export default NextAuth({
         GithubProvider({
             clientId: process.env.GITHUB_ID!,
             clientSecret: process.env.GITHUB_SECRET!,
-        })
+        }),
+        
+        // GoogleProvider({
+        //     clientId: process.env.GOOGLE_CLIENT_ID,
+        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        // })
     ],
 
     // Custom Pages
-    // pages: {
-    //     signIn: '/auth/login',
-    //     newUser: '/auth/register'
-    // },
+    pages: {
+        signIn: '/auth/login',
+        newUser: '/auth/register'
+    },
 
     // Callbacks
     jwt: {
         // secret: process.env.JWT_SECRET_SEED, // deprecated
     },
     
-    // session: {
-    //     maxAge: 2592000, /// 30d
-    //     strategy: 'jwt',
-    //     updateAge: 86400, // cada día
-    // },
+    session: {
+        maxAge: 2592000, /// 30d
+        strategy: 'jwt',
+        updateAge: 86400, // cada día
+    },
 
     callbacks: {
 
         async jwt({ token, account, user }) {
-          // console.log({ token, account, user });
+        //   console.log({ token, account, user });
     
           if ( account ) {
             token.accessToken = account.access_token;
