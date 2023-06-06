@@ -52,11 +52,11 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
             cart: state.cart.filter( product => !(product._id === action.payload._id && product.size === action.payload.size ))
          }
 
-         case '[Cart] - Update order summary':
-            return {
-               ...state,
-               ...action.payload
-            }
+      case '[Cart] - Update order summary':
+         return {
+            ...state,
+            ...action.payload
+         }
    
    
       case '[Cart] - Update Address':
@@ -65,6 +65,16 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
                ...state,
                shippingAddress: action.payload
             }
+            
+      // case '[Cart] - Order complete':
+      //    return {
+      //       ...state,
+      //       cart: [],
+      //       numberOfItems: 0,
+      //       subTotal: 0,
+      //       tax: 0,
+      //       total: 0
+      //    }
    
          default:
             return state;
