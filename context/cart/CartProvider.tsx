@@ -175,7 +175,13 @@ export const CartProvider:FC<Props> = ({ children }) => {
         try {
             
             const { data } = await tesloApi.post('/orders', body)
-            console.log({ data });
+
+            dispatch({type: "[Cart] - Order complete"})
+
+            // return {
+            //     hasError: false,
+            //     message: data._id!
+            // }
             
         } catch (error) {
             console.log(error);
@@ -195,7 +201,7 @@ export const CartProvider:FC<Props> = ({ children }) => {
             updateAddress,
 
             // Ordenes
-            createOrder,
+            createOrder
         }}>
             { children }
         </CartContext.Provider>
