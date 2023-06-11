@@ -4,6 +4,11 @@ import { Typography, Grid, Chip, Link } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { ShopLayout } from '../../components/layouts';
+import { dbOrders } from '@/database';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { GetServerSideProps, NextPage } from 'next';
+import { IOrder } from '@/interfaces';
 
 
 
@@ -52,41 +57,65 @@ const columns: GridColDef[] = [
     }
 ];
 
-
-const rows = [
-    { id: 1, paid: true, fullname: 'Jair Aceves' },
-    { id: 2, paid: false, fullname: 'Melissa Flores' },
-    { id: 3, paid: true, fullname: 'Hernando Vallejo' },
-    { id: 4, paid: false, fullname: 'Emin Reyes' },
-    { id: 5, paid: false, fullname: 'Eduardo Rios' },
-    { id: 6, paid: true, fullname: 'Natalia Herrera' },
-]
-
-
-const HistoryPage = () => {
-  return (
-    <ShopLayout title={'Historial de ordenes'} pageDescription={'Historial de ordenes del cliente'}>
-        <Typography variant='h1' component='h1'>Historial de ordenes</Typography>
-
-
-        <Grid container>
-            <Grid item xs={12} sx={{ height:650, width: '100%' }}>
-                <DataGrid 
-                    rows={ rows }
-                    columns={ columns }
-                    initialState={{
-                      pagination: { 
-                        paginationModel: { pageSize: 5 } 
-                      },
-                    }}
-                    pageSizeOptions={[5, 10, 25]}
-                />
-
-            </Grid>
-        </Grid>
-
-    </ShopLayout>
-  )
+interface Props {
+    orders: IOrder[]
 }
 
+const HistoryPage:NextPage<Props> = ({ orders }) => {
+    
+    const rows = orders.map((order, index) => ({
+        id: index + 1,
+        paid: order.isPaid,
+        fullname: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+        orderId: order._id
+    }))
+
+    return (
+        <ShopLayout title={'Historial de ordenes'} pageDescription={'Historial de ordenes del cliente'}>
+            <Typography variant='h1' component='h1'>Historial de ordenes</Typography>
+
+
+            <Grid container>
+                <Grid item xs={12} sx={{ height:650, width: '100%' }}>
+                    <DataGrid 
+                        rows={ rows }
+                        columns={ columns }
+                        initialState={{
+                        pagination: { 
+                            paginationModel: { pageSize: 5 } 
+                        },
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
+                    />
+
+                </Grid>
+            </Grid>
+
+        </ShopLayout>
+    )
+}
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
+    const session: any = await getServerSession(req, res, authOptions)
+  
+    if(!session) {
+      return {
+        redirect: {
+          destination: '/auth/login?p=/orders/history',
+          permanent: false
+        }
+      }
+    }
+    const userId = session.user.user.id ? session.user.user.id : session.user.user._id;
+    const orders = await dbOrders.getOrdersByUser(userId)
+  
+    return {
+      props: {
+        orders
+      }
+    }
+}
 export default HistoryPage
