@@ -73,12 +73,12 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                             
 
                             <OrderSummary 
-                                // orderValues={{
-                                //     numberOfItems: order.numberOfItems,
-                                //     subTotal: order.subTotal,
-                                //     total: order.total,
-                                //     tax: order.tax,
-                                // }} 
+                                orderValues={{
+                                    numberOfItems: order.numberOfItems,
+                                    subTotal: order.subTotal,
+                                    total: order.total,
+                                    tax: order.tax,
+                                }} 
                             />
 
                             <Box sx={{ mt: 3 }} display="flex" flexDirection='column'>
