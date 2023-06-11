@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Drawer, IconButton, Input, InputAdornment, Link, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
+import { Box, Button, Divider, Drawer, IconButton, Input, InputAdornment, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 import NextLink from 'next/link';
 import { useContext, useState } from 'react';
@@ -40,7 +40,7 @@ export const SideMenu = () => {
                         autoFocus
                         value={ searchTerm }
                         onChange={ (e) => setSearchTerm( e.target.value ) }
-                        onKeyPress={ (e) => e.key === 'Enter' ? onSearchTerm() : null }
+                        onKeyDown={(e) => e.key === 'Enter' ? onSearchTerm() : null}
                         type='text'
                         placeholder="Buscar..."
                         endAdornment={
@@ -58,26 +58,25 @@ export const SideMenu = () => {
                 {
                     isLoggedIn && (
                         <>
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <AccountCircleOutlined/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Perfil'} />
-                            </ListItem>
+                            </ListItemButton>
 
-                            <ListItem button>
+                            <ListItemButton onClick={() => navigateTo('/orders/history')}>
                                 <ListItemIcon>
                                     <ConfirmationNumberOutlined/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Mis Ordenes'} />
-                            </ListItem>
+                            </ListItemButton>
                         </>
                     )
                 }
 
 
-                <ListItem
-                    button  
+                <ListItemButton
                     sx={{ display: { xs: '', sm: 'none' } }}
                     onClick={ () => navigateTo('/category/men') }
                 >
@@ -85,10 +84,9 @@ export const SideMenu = () => {
                         <MaleOutlined/>
                     </ListItemIcon>
                     <ListItemText primary={'Hombres'} />
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem 
-                    button 
+                <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }}
                     onClick={ () => navigateTo('/category/women') }
                 >
@@ -96,10 +94,9 @@ export const SideMenu = () => {
                         <FemaleOutlined/>
                     </ListItemIcon>
                     <ListItemText primary={'Mujeres'} />
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem 
-                    button 
+                <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }}
                     onClick={ () => navigateTo('/category/kid') }
                 >
@@ -107,28 +104,27 @@ export const SideMenu = () => {
                         <EscalatorWarningOutlined/>
                     </ListItemIcon>
                     <ListItemText primary={'Niños'} />
-                </ListItem>
+                </ListItemButton>
 
                 {
                     isLoggedIn 
                     ? (
-                        <ListItem button onClick={ logout }>
+                        <ListItemButton onClick={ logout }>
                             <ListItemIcon>
                                 <LoginOutlined/>
                             </ListItemIcon>
                             <ListItemText primary={'Salir'} />
-                        </ListItem>
+                        </ListItemButton>
                     )
                     : (
-                        <ListItem 
-                            button
+                        <ListItemButton 
                             onClick={ () => navigateTo(`/auth/login?p=${ router.asPath }`) }
                         >
                             <ListItemIcon>
                                 <VpnKeyOutlined/>
                             </ListItemIcon>
                             <ListItemText primary={'Ingresar'} />
-                        </ListItem>
+                        </ListItemButton>
                     )
                 }
 
@@ -140,25 +136,25 @@ export const SideMenu = () => {
                             <Divider />
                             <ListSubheader>Admin Panel</ListSubheader>
 
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <CategoryOutlined/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Productos'} />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <ConfirmationNumberOutlined/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Ordenes'} />
-                            </ListItem>
+                            </ListItemButton>
 
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <AdminPanelSettings/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Usuarios'} />
-                            </ListItem>                        
+                            </ListItemButton>                        
                         </>
                     )
                 }
