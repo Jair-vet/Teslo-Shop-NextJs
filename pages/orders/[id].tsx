@@ -5,109 +5,158 @@ import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material'
 
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
+import { IOrder } from '@/interfaces';
+import { GetServerSideProps, NextPage } from 'next';
+import { getSession } from 'next-auth/react';
+import { dbOrders } from '@/database';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
+
+interface Props {
+    order: IOrder;
+}
 
 
-const OrderPage = () => {
-  return (
-    <ShopLayout title='Resumen de la orden 123671523' pageDescription={'Resumen de la orden'}>
-        <Typography variant='h1' component='h1'>Orden: ABC123</Typography>
+const OrderPage: NextPage<Props> = ({ order }) => {
+    
+    const { shippingAddress } = order;
 
-        {/* <Chip 
-            sx={{ my: 2 }}
-            label="Pendiente de pago"
-            variant='outlined'
-            color="error"
-            icon={ <CreditCardOffOutlined /> }
-        /> */}
-        <Chip 
-            sx={{ my: 2 }}
-            label="Orden ya fue pagada"
-            variant='outlined'
-            color="success"
-            icon={ <CreditScoreOutlined /> }
-        />
+    return (
+        <ShopLayout title='Resumen de la orden' pageDescription={'Resumen de la orden'}>
+            <Typography variant='h1' component='h1'>Orden: { order._id }</Typography>
 
-        <Grid container>
-            <Grid item xs={ 12 } sm={ 7 }>
-                <CartList />
-            </Grid>
-            <Grid item xs={ 12 } sm={ 5 }>
-                <Card className='summary-card'>
-                    <CardContent>
-                        <Typography variant='h2'>Resumen (3 productos)</Typography>
-                        <Divider sx={{ my:1 }} />
+            {
+                order.isPaid
+                ? (
+                    <Chip 
+                        sx={{ my: 2 }}
+                        label="Orden ya fue pagada"
+                        variant='outlined'
+                        color="success"
+                        icon={ <CreditScoreOutlined /> }
+                    />
+                ):
+                (
+                    <Chip 
+                        sx={{ my: 2 }}
+                        label="Pendiente de pago"
+                        variant='outlined'
+                        color="error"
+                        icon={ <CreditCardOffOutlined /> }
+                    />
+                )
+            }
 
-                        {/* Editar */}
-                        <Box display='flex' justifyContent='space-between'>
-                            <Typography variant='subtitle1'>Dirección de entrega</Typography>
-                            <NextLink href='/checkout/address' passHref legacyBehavior>
-                                <Link style={{ 
-                                    backgroundColor: '#8121d4', 
-                                    padding: '10px', 
-                                    color: '#fff', 
-                                    borderRadius: '8px' , 
-                                    width: '80px',
-                                    textAlign: 'center',
-                                    fontWeight: '600',
-                                    textTransform: 'uppercase',
-                                    fontSize: '12px',
-                                }} className='edit-btn'>
-                                    Editar
-                                </Link>
-                            </NextLink>
-                        </Box>
+            <Grid container className='fadeIn'>
+                <Grid item xs={ 12 } sm={ 7 }>
+                    <CartList products={  order.orderItems } />
+                </Grid>
+                <Grid item xs={ 12 } sm={ 5 }>
+                    <Card className='summary-card'>
+                        <CardContent>
+                            <Typography variant='h2'>Resumen ({ order.numberOfItems } { order.numberOfItems > 1 ? 'productos': 'producto'})</Typography>
+                            <Divider sx={{ my:1 }} />
 
-                        
-                        <Typography>Fernando Herrera</Typography>
-                        <Typography>323 Algun lugar</Typography>
-                        <Typography>Stittsville, HYA 23S</Typography>
-                        <Typography>Canadá</Typography>
-                        <Typography>+1 23123123</Typography>
+                            {/* Entrega */}
+                            <Box display='flex' justifyContent='space-between'>
+                                <Typography variant='subtitle1'>Dirección de entrega</Typography>
+                            </Box>
+                            
+                            {/*  Dirección */}
+                            <Typography>{ shippingAddress.firstName } { shippingAddress.lastName }</Typography>
+                            <Typography>{ shippingAddress.address } { shippingAddress.address2 ? `, ${ shippingAddress.address2 }`: '' }</Typography>
+                            <Typography>{ shippingAddress.city }, { shippingAddress.zip }</Typography>
+                            <Typography>{ shippingAddress.country }</Typography>
+                            <Typography>{ shippingAddress.phone }</Typography>
 
-                        <Divider sx={{ my:1 }} />
-                        
-                        {/* Editar */}
-                        <Box display='flex' justifyContent='end'>
-                            <NextLink href='/cart' passHref legacyBehavior>
-                                <Link style={{ 
-                                    backgroundColor: '#8121d4', 
-                                    padding: '10px', 
-                                    color: '#fff', 
-                                    borderRadius: '8px' , 
-                                    width: '80px',
-                                    textAlign: 'center',
-                                    fontWeight: '600',
-                                    textTransform: 'uppercase',
-                                    fontSize: '12px',
-                                }} className='edit-btn'>
-                                    Editar
-                                </Link>
-                            </NextLink>
-                        </Box>
+                            <Divider sx={{ my:1 }} />
+                            
 
-                        <OrderSummary />
-
-                        <Box sx={{ mt: 3 }}>
-                            {/* TODO */}
-                            <h1>Pagar</h1>
-
-                            <Chip 
-                                sx={{ my: 2 }}
-                                label="Orden ya fue pagada"
-                                variant='outlined'
-                                color="success"
-                                icon={ <CreditScoreOutlined /> }
+                            <OrderSummary 
+                                // orderValues={{
+                                //     numberOfItems: order.numberOfItems,
+                                //     subTotal: order.subTotal,
+                                //     total: order.total,
+                                //     tax: order.tax,
+                                // }} 
                             />
-                        </Box>
 
-                    </CardContent>
-                </Card>
+                            <Box sx={{ mt: 3 }} display="flex" flexDirection='column'>
+                                {
+                                    order.isPaid
+                                    ? (
+                                        <Chip 
+                                            sx={{ my: 2 }}
+                                            label="Orden ya fue pagada"
+                                            variant='outlined'
+                                            color="success"
+                                            icon={ <CreditScoreOutlined /> }
+                                        />
+
+                                    ):(
+                                        <h1>Pagar</h1>
+                                    )
+                                }
+
+                            </Box>
+
+                        </CardContent>
+                    </Card>
+                </Grid>
             </Grid>
-        </Grid>
 
 
-    </ShopLayout>
-  )
+        </ShopLayout>
+    )
+}
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query, res }) => {
+    
+    const { id = '' } = query;
+    const session: any = await getServerSession(req, res, authOptions);
+
+    if (!session) {
+      return {
+        redirect: {
+          destination: `/auth/login?p=/orders/${id}`,
+          permanent: false,
+        }
+      }
+    }
+
+    const order = await dbOrders.getOrderById(id.toString());
+
+    if (!order) {
+        return {
+        redirect: {
+            destination: `/orders/history`,
+            permanent: false,
+        }
+        }
+    }
+
+    //const userId = session.user.user.id ? session.user.user.id : session.user.user._id;
+    const userId = session.user.user.id || session.user.user._id;
+
+    if (order.user !== userId) {
+        return {
+        redirect: {
+            destination: `/orders/history`,
+            permanent: false,
+        }
+        }
+    }
+
+
+    return {
+        props: {
+            order
+        }
+    }
 }
 
 export default OrderPage;
