@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Divider, Grid, Typography, Chip } from '@mui/material';
+import { Box, Card, CardContent, Divider, Grid, Typography, Chip, CircularProgress } from '@mui/material';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
@@ -45,7 +45,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
             })
 
             router.reload()
-            
+
         } catch (error) {
             setIsPaying(false)
             console.log(error)
@@ -115,6 +115,15 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                             />
 
                             <Box sx={{ mt: 3 }} display="flex" flexDirection='column'>
+                            <Box
+                                display='flex'
+                                justifyContent='center'
+                                className='fadeIn'
+                                sx={{ display: isPaying ? 'flex' : 'none' }}
+                            >
+                                <CircularProgress />
+                            </Box>
+                            <Box flexDirection='column' sx={{ display: isPaying ? 'none' : 'flex', flex: 1 }} >
                                 {
                                     order.isPaid
                                     ? (
@@ -155,6 +164,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                     )
                                 }
 
+                                </Box>
                             </Box>
 
                         </CardContent>

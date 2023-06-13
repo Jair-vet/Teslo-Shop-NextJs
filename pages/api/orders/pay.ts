@@ -89,6 +89,6 @@ const payOrder = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
   await db.disconnect()
 
 
-  return res.status(200).json({ message: paypalBearerToken })
+  return res.status(200).json({ message: 'Orden pagada' })
 
 }
