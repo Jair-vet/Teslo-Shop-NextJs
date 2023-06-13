@@ -1,27 +1,58 @@
-import NextLink from 'next/link';
-
-import { Link, Box, Card, CardContent, Divider, Grid, Typography, Chip } from '@mui/material';
+import { Box, Card, CardContent, Divider, Grid, Typography, Chip } from '@mui/material';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
-
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
 import { IOrder } from '@/interfaces';
 import { GetServerSideProps, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import { dbOrders } from '@/database';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { OrderResponseBody } from '@paypal/paypal-js';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { tesloApi } from '@/api';
+import { dbOrders } from '@/database';
 
 interface Props {
     order: IOrder;
 }
 
+export type OrderResponseBody = {
+    id: string;
+    status: "COMPLETED" | "SAVED" | "APPROVED" | "VOIDED" | "PAYER_ACTION_REQUIRED" | "CREATED"
+  };
+  // "COMPLETED" | "SAVED" | "APPROVED" | "VOIDED" | "PAYER_ACTION_REQUIRED"
+  
 
 const OrderPage: NextPage<Props> = ({ order }) => {
     
     const { shippingAddress } = order;
+
+    const router = useRouter();
+    const [isPaying, setIsPaying] = useState(false)
+
+    const onOrderCompleted = async (details: OrderResponseBody) => {
+
+        if (details.status !== 'COMPLETED') {
+            return alert('No hay pago en Paypal')
+        }
+
+        setIsPaying(true)
+
+        try {
+            const { data } = await tesloApi.post('/orders/pay', {
+                transactionId: details.id,
+                orderId: order._id
+            })
+
+            router.reload()
+            
+        } catch (error) {
+            setIsPaying(false)
+            console.log(error)
+            alert('Error')
+        }
+
+    }
 
     return (
         <ShopLayout title='Resumen de la orden' pageDescription={'Resumen de la orden'}>
@@ -98,27 +129,27 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                     ):(
                                         <PayPalButtons
                                             createOrder={(data, actions) => {
-                                            return actions.order.create({
-                                                purchase_units: [
-                                                {
-                                                    amount: {
-                                                        value: `${order.total}`,
+                                                return actions.order.create({
+                                                    purchase_units: [
+                                                    {
+                                                        amount: {
+                                                            value: `${order.total}`,
+                                                        },
                                                     },
-                                                },
-                                                ],
-                                            });
+                                                    ],
+                                                });
                                             }}
                                             onApprove={(data, actions) => {
                                                 // function onOrderCompleted(details: OrderResponseBody) {
                                                 //     throw new Error('Function not implemented.');
                                                 // }
 
-                                            return actions.order!.capture().then((details) => {
-                                                // onOrderCompleted(details);
-                                                console.log({details})
-                                                const name = details.payer.name!.given_name;
-                                                // alert(`Transaction completed by ${name}`);
-                                            });
+                                                return actions.order!.capture().then((details) => {
+                                                    // console.log({details})
+                                                    onOrderCompleted(details);
+                                                    // const name = details.payer.name!.given_name;
+                                                    // alert(`Transaction completed by ${name}`);
+                                                });
                                             }}  
                                       />
                                     )
