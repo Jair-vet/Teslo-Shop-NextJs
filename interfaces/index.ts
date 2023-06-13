@@ -1,4 +1,6 @@
-export * from './cart';
-export * from './order';
-export * from './products';
-export * from './user';
+export * from './products'
+export * from './cart'
+export * from './user'
+export * from './order'
+export * as IPaypal from './paypal'
+// export * from './dashboard'
