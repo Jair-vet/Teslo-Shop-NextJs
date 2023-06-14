@@ -1,6 +1,6 @@
 import Head from "next/head"
 import { PropsWithChildren, FC } from "react"
-import { Navbar, SideMenu } from "../ui"
+import {  Navbar, SideMenu } from "../ui"
 
 interface Props extends PropsWithChildren {
     title: string
