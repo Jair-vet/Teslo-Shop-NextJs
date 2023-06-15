@@ -28,7 +28,7 @@ export const AdminLayout = ({ children, title, subTitle, icon }: Props): JSX.Ele
             <Box display='flex' flexDirection='column'>
                 <Typography variant="h1" component="h1">
                     {icon}
-                    {/* {" "} */}
+                    {" "}
                     {title}
                 </Typography>
                 <Typography variant="h2" sx={{ mb: 1 }}>{ subTitle }</Typography>
