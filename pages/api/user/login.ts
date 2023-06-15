@@ -45,9 +45,9 @@ const loginUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         return res.status(400).json({ message: 'Correo o contraseña no válidos - Password' })
     }
 
-    const { role, name, _id } = user;
+    const {role, name, _id} = user;
 
-    const token = jwt.signToken( _id, email );
+    const token = jwt.signToken( _id as string, email);
 
     return res.status(200).json({
         token, //jwt
