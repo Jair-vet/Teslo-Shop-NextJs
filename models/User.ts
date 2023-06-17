@@ -9,11 +9,11 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: {
-            values: ['admin','client'],
-            message: '{VALUE} no es un role válido',
+            values: ['admin', 'client', 'super-user', 'SEO'],
+            message: '{VALUE} no es un valor valido',
             default: 'client',
             required: true
-        }
+        },
     }
 }, {
     timestamps: true,
