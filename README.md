@@ -1,7 +1,14 @@
 # Next.js Telo Shop
-Para correr localmente, se necesita la base de datos.
+* App Estable y Corriendo
 ```
+https://teslo-shop-nextjs-production.up.railway.app/category/kid
+```
+
+
+
+Para correr localmente, se necesita la base de datos.
 docker-compose up -d
+```
 ```
 
 * El -d, significa __detached__
@@ -17,8 +24,8 @@ MONGO_URL=mongodb://localhost:27017/teslodb
 
 * Reconstruir los módulos de node y levantar Next
 ```
-yarn install
-yarn dev
+npm install
+npm run dev
 ```
 
 
