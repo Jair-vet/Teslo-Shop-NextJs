@@ -2,6 +2,9 @@
 * App Estable y Corriendo
 ```
 https://teslo-shop-nextjs-production.up.railway.app/category/kid
+![Teslo App](https://github.com/Jair-vet/Teslo-Shop-NextJs/assets/63264620/785ffec7-05ad-45b5-9815-561f0ee693c8)
+
+
 ```
 
 
