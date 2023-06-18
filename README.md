@@ -7,7 +7,6 @@ https://teslo-shop-nextjs-production.up.railway.app/category/kid
 
 
 
-
 Para correr localmente, se necesita la base de datos.
 docker-compose up -d
 ```
