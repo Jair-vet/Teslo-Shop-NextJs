@@ -91,16 +91,16 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 		}
 
 
-		// try {
-		// 	for (const file of target.files) {
-		// 		const formData = new FormData()
-		// 		formData.append('file', file)
-		// 		const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData)
-		// 		setValue('images', [...getValues('images'), data.message], {shouldValidate: true})
-		// 	}
-		// } catch (error) {
-		// 	console.log({error})
-		// }
+		try {
+			for (const file of target.files) {
+				const formData = new FormData()
+				formData.append('file', file)
+				const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData)
+				setValue('images', [...getValues('images'), data.message], {shouldValidate: true})
+			}
+		} catch (error) {
+			console.log({error})
+		}
 	}
 
 	const onSubmit = async (form: FormData) => {
@@ -228,7 +228,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 											control={<Radio color='secondary' />}
 											label={capitalize(option)}
 										/>
-									))
+										))
 								}
 							</RadioGroup>
 						</FormControl>
