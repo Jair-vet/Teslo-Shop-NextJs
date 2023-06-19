@@ -4,8 +4,8 @@ import { Product } from '@/models';
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-// import { v2 as cloudinary } from 'cloudinary'
-// cloudinary.config(process.env.CLOUDINARY_URL || '');
+import { v2 as cloudinary } from 'cloudinary'
+cloudinary.config(process.env.CLOUDINARY_URL || '');
 
 type Data =
 | { message: string }
@@ -77,7 +77,7 @@ const updateProduct = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
       if(!images.includes(image)) {
         //borrar de cloudinary
         const [ fileId, extension ] = image.substring(image.lastIndexOf('/') + 1).split('.');
-        // await cloudinary.uploader.destroy( fileId )
+        await cloudinary.uploader.destroy( fileId )
       }
     })
 
