@@ -1,7 +1,7 @@
 # Next.js Telo Shop
 * App Estable y Corriendo
 ```
-https://teslo-shop-nextjs-production.up.railway.app/category/kid
+https://teslo-shop-nextjs-production.up.railway.app
 ```
 ![Teslo App](https://github.com/Jair-vet/Teslo-Shop-NextJs/assets/63264620/c4c21bdb-8b49-40b6-98e0-a83ce23df29a)
 
