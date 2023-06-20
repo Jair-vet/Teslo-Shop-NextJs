@@ -92,16 +92,29 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
 
 		try {
-			for (const file of target.files) {
-				const formData = new FormData()
-				formData.append('file', file)
-				const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData)
-				setValue('images', [...getValues('images'), data.message], {shouldValidate: true})
-			}
-		} catch (error) {
-			console.log({error})
-		}
+            
+            // console.log( file );
+            for( const file of target.files ) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const { data } = await tesloApi.post<{ message: string}>('/admin/upload', formData);
+                setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
+            }
+
+
+        } catch (error) {
+            console.log({ error });
+        }
 	}
+
+
+	const onDeleteImage = (image: string) => {
+		setValue('images', 
+			getValues('images').filter(img => img !== image),
+			{ shouldValidate: true }
+		)
+	}
+
 
 	const onSubmit = async (form: FormData) => {
 		if (form.images.length < 2) return alert('Minimo 2 imagenes');
@@ -114,12 +127,14 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 				data: form
 			})
 
+			console.log({data});
 			if (!form._id) {
 				//todo recargar el navegador
-				router.replace(`/admin/products/${form.slug}`)
+				router.replace(`/admin/products/${ form.slug }`)
 			} else {
 				setIsSaving(false)
 			}
+			
 		} catch (error) {
 			console.log(error)
 			setIsSaving(false)
@@ -127,12 +142,6 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
 	}
 
-	const onDeleteImage = (image: string) => {
-		setValue('images', 
-		getValues('images').filter(img => img !== image),
-		{ shouldValidate: true }
-		)
-	}
 
 	return (
 		<AdminLayout
